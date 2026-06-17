@@ -1,0 +1,317 @@
+{
+  "nodes": [
+    {
+      "id": "input-image",
+      "type": "file",
+      "file": "Vision_Transformer_Guide.md",
+      "x": -600,
+      "y": -400,
+      "width": 300,
+      "height": 200,
+      "color": "1"
+    },
+    {
+      "id": "image-box",
+      "type": "text",
+      "text": "## 📷 Input Image\n\n**Shape**: `(B, 3, 32, 32)`\n\nCIFAR-10 RGB image\n- 32×32 pixels\n- 3 color channels\n- Batch size B",
+      "x": -600,
+      "y": -150,
+      "width": 280,
+      "height": 180,
+      "color": "1"
+    },
+    {
+      "id": "patch-embed-title",
+      "type": "text",
+      "text": "## 🔲 Patch Embedding\n\n**`PatchEmbedding` class**",
+      "x": -200,
+      "y": -400,
+      "width": 280,
+      "height": 120,
+      "color": "4"
+    },
+    {
+      "id": "patch-embed-detail",
+      "type": "text",
+      "text": "### Process:\n1. Conv2d with `kernel=4, stride=4`\n2. Flatten patches\n3. Transpose to sequence\n\n**Output**: `(B, 64, 256)`\n- 64 patches (8×8 grid)\n- 256 embedding dim",
+      "x": -200,
+      "y": -260,
+      "width": 280,
+      "height": 200,
+      "color": "4"
+    },
+    {
+      "id": "pos-embed-title",
+      "type": "text",
+      "text": "## 📍 Position + CLS Token\n\nAdd learnable embeddings",
+      "x": 150,
+      "y": -400,
+      "width": 260,
+      "height": 100,
+      "color": "5"
+    },
+    {
+      "id": "pos-embed-detail",
+      "type": "text",
+      "text": "### Components:\n- **CLS Token**: `(1, 1, 256)`\n  - Prepended to sequence\n  - Used for classification\n\n- **Position Embed**: `(1, 65, 256)`\n  - Spatial information\n  - Learned during training\n\n**Output**: `(B, 65, 256)`",
+      "x": 150,
+      "y": -280,
+      "width": 260,
+      "height": 220,
+      "color": "5"
+    },
+    {
+      "id": "transformer-block-group",
+      "type": "group",
+      "x": 480,
+      "y": -450,
+      "width": 500,
+      "height": 420,
+      "color": "6",
+      "label": "Transformer Block ×6"
+    },
+    {
+      "id": "block-input",
+      "type": "text",
+      "text": "### Block Input\n`(B, 65, 256)`",
+      "x": 500,
+      "y": -420,
+      "width": 120,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "ln1",
+      "type": "text",
+      "text": "### LayerNorm\n`norm1`\n\nNormalizes across\nembedding dimension",
+      "x": 500,
+      "y": -340,
+      "width": 140,
+      "height": 100,
+      "color": "3"
+    },
+    {
+      "id": "mhsa",
+      "type": "text",
+      "text": "## 🎯 Multi-Head\n## Self-Attention\n\n**`MultiHeadAttention`**\n- 8 heads\n- head_dim = 32",
+      "x": 500,
+      "y": -220,
+      "width": 180,
+      "height": 140,
+      "color": "2"
+    },
+    {
+      "id": "attention-math",
+      "type": "text",
+      "text": "### Attention Formula:\n\n$$\\text{Attn}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d}}\\right)V$$\n\n- Q, K, V from linear projections\n- Scale by $\\sqrt{d_k}$\n- Softmax for attention weights",
+      "x": 700,
+      "y": -280,
+      "width": 260,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "residual1",
+      "type": "text",
+      "text": "### ➕ Residual\n`(+)`\n\nSkip connection preserves\ngradient flow",
+      "x": 700,
+      "y": -100,
+      "width": 140,
+      "height": 100,
+      "color": "6"
+    },
+    {
+      "id": "ln2",
+      "type": "text",
+      "text": "### LayerNorm\n`norm2`",
+      "x": 500,
+      "y": -60,
+      "width": 100,
+      "height": 60,
+      "color": "3"
+    },
+    {
+      "id": "mlp",
+      "type": "text",
+      "text": "## 🧠 MLP\n\n**Hidden: 1024 (4×)**\n- Linear → GELU\n- Dropout → Linear\n- Dropout",
+      "x": 500,
+      "y": 20,
+      "width": 160,
+      "height": 120,
+      "color": "4"
+    },
+    {
+      "id": "residual2",
+      "type": "text",
+      "text": "### ➕ Residual\n`(+)`",
+      "x": 700,
+      "y": 40,
+      "width": 100,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "block-output",
+      "type": "text",
+      "text": "### Block Output\n`(B, 65, 256)`",
+      "x": 820,
+      "y": 40,
+      "width": 140,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "final-ln",
+      "type": "text",
+      "text": "## 📊 Final LayerNorm\n\nNormalize before classification\n\n**Output**: `(B, 65, 256)`",
+      "x": 1050,
+      "y": -200,
+      "width": 200,
+      "height": 140,
+      "color": "3"
+    },
+    {
+      "id": "cls-extract",
+      "type": "text",
+      "text": "## 🔑 Extract CLS Token\n\n`x[:, 0]` - First token only\n\n**Output**: `(B, 256)`",
+      "x": 1050,
+      "y": -40,
+      "width": 200,
+      "height": 120,
+      "color": "5"
+    },
+    {
+      "id": "classifier",
+      "type": "text",
+      "text": "## 🏷️ Classification Head\n\n**Linear(256 → 10)**\n\n10 classes for CIFAR-10:\n- airplane, automobile, bird\n- cat, deer, dog, frog\n- horse, ship, truck",
+      "x": 1050,
+      "y": 100,
+      "width": 200,
+      "height": 180,
+      "color": "1"
+    },
+    {
+      "id": "output",
+      "type": "text",
+      "text": "## ✅ Output\n\n**Logits**: `(B, 10)`\n\nApply softmax for probabilities",
+      "x": 1050,
+      "y": 310,
+      "width": 180,
+      "height": 120,
+      "color": "1"
+    },
+    {
+      "id": "legend",
+      "type": "text",
+      "text": "## Legend\n\n🟦 Input/Output\n🟥 Attention\n🟨 Normalization\n🟩 Embedding/MLP\n🟪 Position/Token\n🟧 Transformer Block",
+      "x": -600,
+      "y": 100,
+      "width": 200,
+      "height": 180
+    },
+    {
+      "id": "params",
+      "type": "text",
+      "text": "## Model Parameters\n\n- **patch_size**: 4\n- **embed_dim**: 256\n- **num_heads**: 8\n- **num_layers**: 6\n- **mlp_ratio**: 4\n- **dropout**: 0.1\n\n**~1.5M parameters**",
+      "x": -600,
+      "y": 320,
+      "width": 200,
+      "height": 200,
+      "color": "6"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "fromNode": "image-box",
+      "toNode": "patch-embed-title",
+      "color": "4"
+    },
+    {
+      "id": "e2",
+      "fromNode": "patch-embed-detail",
+      "toNode": "pos-embed-title",
+      "color": "5"
+    },
+    {
+      "id": "e3",
+      "fromNode": "pos-embed-detail",
+      "toNode": "block-input",
+      "color": "6"
+    },
+    {
+      "id": "e4",
+      "fromNode": "block-input",
+      "toNode": "ln1",
+      "color": "3"
+    },
+    {
+      "id": "e5",
+      "fromNode": "ln1",
+      "toNode": "mhsa",
+      "color": "2"
+    },
+    {
+      "id": "e6",
+      "fromNode": "mhsa",
+      "toNode": "residual1",
+      "color": "6"
+    },
+    {
+      "id": "e7",
+      "fromNode": "residual1",
+      "toNode": "ln2",
+      "color": "3"
+    },
+    {
+      "id": "e8",
+      "fromNode": "ln2",
+      "toNode": "mlp",
+      "color": "4"
+    },
+    {
+      "id": "e9",
+      "fromNode": "mlp",
+      "toNode": "residual2",
+      "color": "6"
+    },
+    {
+      "id": "e10",
+      "fromNode": "residual2",
+      "toNode": "block-output",
+      "color": "6"
+    },
+    {
+      "id": "e11",
+      "fromNode": "block-output",
+      "toNode": "final-ln",
+      "color": "3"
+    },
+    {
+      "id": "e12",
+      "fromNode": "final-ln",
+      "toNode": "cls-extract",
+      "color": "5"
+    },
+    {
+      "id": "e13",
+      "fromNode": "cls-extract",
+      "toNode": "classifier",
+      "color": "1"
+    },
+    {
+      "id": "e14",
+      "fromNode": "classifier",
+      "toNode": "output",
+      "color": "1"
+    },
+    {
+      "id": "e15",
+      "fromNode": "mhsa",
+      "toNode": "attention-math",
+      "color": "2",
+      "toSide": "left",
+      "fromSide": "right"
+    }
+  ]
+}
